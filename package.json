@@ -2,7 +2,8 @@
   "name": "taskpro-backend",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "type": "module",
+  "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon src/index.js"
@@ -14,7 +15,6 @@
   "keywords": [],
   "author": "Ahmet Canbaz <ahmet-canbaz@hotmail.com>",
   "license": "ISC",
-  "type": "commonjs",
   "bugs": {
     "url": "https://github.com/canbazahmet/TaskPro-backend/issues"
   },
@@ -26,6 +26,7 @@
     "nodemon": "^3.1.11"
   },
   "dependencies": {
+    "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
     "dotenv": "^17.2.4",
     "express": "^5.2.1",
