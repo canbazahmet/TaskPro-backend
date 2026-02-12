@@ -1,15 +1,13 @@
-import { swaggerDocs } from './middlewares/swaggerDocs.js';
 import express from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
+import { env } from './utils/env.js';
+import { swaggerDocs } from './middlewares/swaggerDocs.js';
 import { UPLOAD_DIR } from './constants/tempUpload.js';
 
-dotenv.config();
+const PORT = Number(env('PORT', '3000'));
 
-const PORT = process.env.PORT;
-
-export const setupServer = () => {
+export const startServer = () => {
   const app = express();
 
   app.use(
@@ -23,6 +21,7 @@ export const setupServer = () => {
   app.use(cookieParser());
 
   app.use('/uploads', express.static(UPLOAD_DIR));
+
   app.use('/api-docs', swaggerDocs());
 
   app.listen(PORT, () => {

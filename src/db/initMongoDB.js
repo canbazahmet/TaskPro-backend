@@ -1,12 +1,16 @@
 import mongoose from 'mongoose';
 
-const initMongoDB = async () => {
+import { env } from '../utils/env.js';
+
+export const initMongoDB = async () => {
   try {
-    await mongoose.connect(process.env.MONGODB_URI);
+    const uri = env('MONGODB_URI');
+
+    await mongoose.connect(uri);
+
     console.log('Mongo connection successfully!');
   } catch (error) {
     console.log('Error while setting up mongo connection', error);
+    throw error;
   }
 };
-
-export default initMongoDB;
