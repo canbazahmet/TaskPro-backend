@@ -35,21 +35,18 @@ export const updateTask = async (filter, payload) => {
     new: true,
   });
 
-  return {
-    data: result,
-    isNew: Boolean(result && result.upserted),
-  };
+  return result;
 };
 
-export const findOldColumnId = async (_id) => {
-  const data = await TasksCollection.findById(_id);
-  const oldColumnId = data.columnId;
+export const findOldColumnId = async (filter) => {
+  const data = await TasksCollection.findOne(filter);
+  if (!data) return null;
 
-  return oldColumnId;
+  return data;
 };
 
 export const deleteTask = async (filter) => {
-  const deletedTask = await TasksCollection.findByIdAndDelete(filter);
+  const deletedTask = await TasksCollection.findOneAndDelete(filter);
 
   if (deletedTask) {
     await ColumnCollection.findOneAndUpdate(deletedTask.columnId, {

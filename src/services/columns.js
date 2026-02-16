@@ -1,3 +1,5 @@
+import createHttpError from 'http-errors';
+
 import BoardCollection from '../db/Boards.js';
 import ColumnCollection from '../db/Columns.js';
 import TaskCollection from '../db/Tasks.js';
@@ -7,11 +9,11 @@ export const addColumn = async (payload) => {
 
   const board = await BoardCollection.findOne({ _id: boardId, userId });
   if (!board) {
-    throw new Error('User does not have access to this board.');
+    throw createHttpError(403, 'User does not have access to this board.');
   }
 
   const highestOrderColumn = await ColumnCollection.findOne({ boardId })
-    .sort('-order')
+    .sort({ order: -1 })
     .exec();
 
   const newOrder = highestOrderColumn ? highestOrderColumn.order + 1 : 1;

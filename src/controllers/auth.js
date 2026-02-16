@@ -1,4 +1,5 @@
 import createHttpError from 'http-errors';
+import fs from 'node:fs/promises';
 
 import { THIRTY_DAYS } from '../constants/tokenLifetime.js';
 import {
@@ -12,14 +13,25 @@ import {
 import { env } from '../utils/env.js';
 import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
 
-const setupSession = (res, session) => {
-  res.cookie('refreshToken', session.refreshToken, {
+const getCookieOptions = () => {
+  const isProd = env('NODE_ENV', 'development') === 'production';
+  return {
     httpOnly: true,
+    secure: isProd,
+    sameSite: isProd ? 'none' : 'lax',
+  };
+};
+
+const setupSession = (res, session) => {
+  const cookieOptions = getCookieOptions();
+
+  res.cookie('refreshToken', session.refreshToken, {
+    ...cookieOptions,
     expires: new Date(Date.now() + THIRTY_DAYS),
   });
 
   res.cookie('sessionId', session._id, {
-    httpOnly: true,
+    ...cookieOptions,
     expires: new Date(Date.now() + THIRTY_DAYS),
   });
 };
@@ -72,9 +84,14 @@ export const updateUserController = async (req, res) => {
 
   if (avatar && env('ENABLE_CLOUDINARY') === 'true') {
     avatarUrl = await saveFileToCloudinary(avatar);
+  } else if (avatar) {
+    await fs.unlink(avatar.path);
   }
 
-  const updateData = { ...req.body, avatar: avatarUrl };
+  const updateData = {
+    ...req.body,
+    ...(avatarUrl ? { avatar: avatarUrl } : {}),
+  };
   const result = await updateUser({ _id }, updateData);
 
   if (!result) {
@@ -89,6 +106,10 @@ export const updateUserController = async (req, res) => {
 };
 
 export const refreshUsersSessionController = async (req, res) => {
+  if (!req.cookies.sessionId || !req.cookies.refreshToken) {
+    throw createHttpError(401, 'Missing session credentials');
+  }
+
   const session = await refreshUserSession({
     sessionId: req.cookies.sessionId,
     refreshToken: req.cookies.refreshToken,
@@ -110,8 +131,9 @@ export const logoutUserController = async (req, res) => {
     await logoutUser(req.cookies.sessionId);
   }
 
-  res.clearCookie('sessionId');
-  res.clearCookie('refreshToken');
+  const cookieOptions = getCookieOptions();
+  res.clearCookie('sessionId', cookieOptions);
+  res.clearCookie('refreshToken', cookieOptions);
 
   res.status(204).send();
 };
