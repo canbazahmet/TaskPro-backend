@@ -132,7 +132,7 @@
                   "name": {
                     "description": "user name",
                     "type": "string",
-                    "example": "Ahmet"
+                    "example": "Ahmet Canbaz"
                   },
                   "email": {
                     "description": "User email",
