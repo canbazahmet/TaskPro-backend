@@ -1,6 +1,4 @@
 import createHttpError from 'http-errors';
-import fs from 'node:fs/promises';
-import path from 'node:path';
 
 import { THIRTY_DAYS } from '../constants/tokenLifetime.js';
 import {
@@ -13,27 +11,15 @@ import {
 } from '../services/auth.js';
 import { env } from '../utils/env.js';
 import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
-import { UPLOAD_DIR } from '../constants/tempUpload.js';
-
-const getCookieOptions = () => {
-  const isProd = env('NODE_ENV', 'development') === 'production';
-  return {
-    httpOnly: true,
-    secure: isProd,
-    sameSite: isProd ? 'none' : 'lax',
-  };
-};
 
 const setupSession = (res, session) => {
-  const cookieOptions = getCookieOptions();
-
   res.cookie('refreshToken', session.refreshToken, {
-    ...cookieOptions,
+    httpOnly: true,
     expires: new Date(Date.now() + THIRTY_DAYS),
   });
 
   res.cookie('sessionId', session._id, {
-    ...cookieOptions,
+    httpOnly: true,
     expires: new Date(Date.now() + THIRTY_DAYS),
   });
 };
@@ -86,16 +72,9 @@ export const updateUserController = async (req, res) => {
 
   if (avatar && env('ENABLE_CLOUDINARY') === 'true') {
     avatarUrl = await saveFileToCloudinary(avatar);
-  } else if (avatar) {
-    const targetPath = path.join(UPLOAD_DIR, avatar.filename);
-    await fs.rename(avatar.path, targetPath);
-    avatarUrl = `/uploads/${avatar.filename}`;
   }
 
-  const updateData = {
-    ...req.body,
-    ...(avatarUrl ? { avatar: avatarUrl } : {}),
-  };
+  const updateData = { ...req.body, avatar: avatarUrl };
   const result = await updateUser({ _id }, updateData);
 
   if (!result) {
@@ -110,10 +89,6 @@ export const updateUserController = async (req, res) => {
 };
 
 export const refreshUsersSessionController = async (req, res) => {
-  if (!req.cookies.sessionId || !req.cookies.refreshToken) {
-    throw createHttpError(401, 'Missing session credentials');
-  }
-
   const session = await refreshUserSession({
     sessionId: req.cookies.sessionId,
     refreshToken: req.cookies.refreshToken,
@@ -135,9 +110,8 @@ export const logoutUserController = async (req, res) => {
     await logoutUser(req.cookies.sessionId);
   }
 
-  const cookieOptions = getCookieOptions();
-  res.clearCookie('sessionId', cookieOptions);
-  res.clearCookie('refreshToken', cookieOptions);
+  res.clearCookie('sessionId');
+  res.clearCookie('refreshToken');
 
   res.status(204).send();
 };

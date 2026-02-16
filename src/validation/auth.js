@@ -22,4 +22,4 @@ export const updateUserSchema = Joi.object({
   theme: Joi.string()
     .valid(...themeType)
     .optional(),
-}).min(1);
+});

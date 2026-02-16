@@ -16,4 +16,4 @@ export const updateBoardSchema = Joi.object({
     .valid(...boardImages)
     .allow(null),
   icon: Joi.string().valid(...boardIcons),
-}).min(1);
+});

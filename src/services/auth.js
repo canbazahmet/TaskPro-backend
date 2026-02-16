@@ -22,20 +22,20 @@ export const registerUser = async (payload) => {
   const user = await UsersCollection.findOne({ email: payload.email });
   if (user) throw createHttpError(409, 'Email in use');
 
-  const encryptedPassword = await bcrypt.hash(payload.password, 10);
+  const encrypdetPassword = await bcrypt.hash(payload.password, 10);
 
   return await UsersCollection.create({
     ...payload,
-    password: encryptedPassword,
+    password: encrypdetPassword,
   });
 };
 
 export const loginUser = async (payload) => {
   const user = await UsersCollection.findOne({ email: payload.email });
-  if (!user) throw createHttpError(401, 'Invalid credentials');
+  if (!user) throw createHttpError(404, 'User not found');
 
   const isEqual = await bcrypt.compare(payload.password, user.password);
-  if (!isEqual) throw createHttpError(401, 'Invalid credentials');
+  if (!isEqual) throw createHttpError(401, 'The password is not correct');
 
   await SessionsCollection.deleteOne({ userId: user._id });
 
@@ -68,31 +68,27 @@ export const updateUser = async (filter, payload, options = {}) => {
   });
   if (!currentUser) throw createHttpError(404, 'Not found user');
 
-  const updatePayload = { ...payload };
-
-  if (updatePayload.theme && updatePayload.theme === currentUser.theme) {
-    delete updatePayload.theme;
+  if (payload.theme && payload.theme === currentUser.theme) {
+    return {
+      user: currentUser,
+    };
   }
 
-  if (updatePayload.password) {
-    const encryptedPassword = await bcrypt.hash(updatePayload.password, 10);
-    updatePayload.password = encryptedPassword;
+  if (payload.password) {
+    const encryptedPassword = await bcrypt.hash(payload.password, 10);
+    payload.password = encryptedPassword;
   }
 
-  const updatedUser = await UsersCollection.findOneAndUpdate(
-    filter,
-    updatePayload,
-    {
-      ...options,
-      new: true,
-      runValidators: true,
-    },
-  );
+  const rawResult = await UsersCollection.findOneAndUpdate(filter, payload, {
+    ...options,
+    new: true,
+    includeResultMetadata: true,
+  });
 
-  if (!updatedUser) return null;
+  if (!rawResult || !rawResult.value) return null;
 
   return {
-    user: updatedUser,
+    user: rawResult.value,
   };
 };
 

@@ -13,4 +13,5 @@ export const updateColumnSchema = Joi.object({
   title: Joi.string().min(3).max(30).optional().messages({
     'string.empty': 'Title is required',
   }),
-}).min(1);
+  tasks: Joi.array().items(Joi.string()).optional(),
+});

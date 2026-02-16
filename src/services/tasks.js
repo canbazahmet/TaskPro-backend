@@ -22,7 +22,7 @@ export const replaceTask = async (oldColumn, newColumn, taskId) => {
   });
 
   await ColumnCollection.findOneAndUpdate(newColumn, {
-    $addToSet: { tasks: taskId },
+    $push: { tasks: taskId },
   });
 };
 
@@ -35,26 +35,26 @@ export const updateTask = async (filter, payload) => {
     new: true,
   });
 
-  return result;
+  return {
+    data: result,
+    isNew: Boolean(result && result.upserted),
+  };
 };
 
-export const findOldColumnId = async (filter) => {
-  const data = await TasksCollection.findOne(filter);
-  if (!data) return null;
+export const findOldColumnId = async (_id) => {
+  const data = await TasksCollection.findById(_id);
+  const oldColumnId = data.columnId;
 
-  return data;
+  return oldColumnId;
 };
 
 export const deleteTask = async (filter) => {
-  const deletedTask = await TasksCollection.findOneAndDelete(filter);
+  const deletedTask = await TasksCollection.findByIdAndDelete(filter);
 
   if (deletedTask) {
-    await ColumnCollection.findOneAndUpdate(
-      { _id: deletedTask.columnId },
-      {
-        $pull: { tasks: filter._id },
-      },
-    );
+    await ColumnCollection.findOneAndUpdate(deletedTask.columnId, {
+      $pull: { tasks: filter._id },
+    });
   }
 
   return deletedTask;

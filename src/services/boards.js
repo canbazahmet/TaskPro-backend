@@ -38,10 +38,15 @@ export const addBoard = async (payload) => {
 export const updateBoard = async (filter, payload, options = {}) => {
   const result = await BoardCollection.findOneAndUpdate(filter, payload, {
     new: true,
+    includeResultMetadata: true,
     ...options,
   });
 
-  return result;
+  if (!result || !result.value) return null;
+
+  return {
+    data: result.value,
+  };
 };
 
 export const deleteBoard = async (filter) => {
@@ -49,7 +54,7 @@ export const deleteBoard = async (filter) => {
   if (deletedBoard) {
     await ColumnCollection.deleteMany({ boardId: filter._id });
     await TasksCollection.deleteMany({ boardId: filter._id });
-    await UsersCollection.findByIdAndUpdate(filter.userId, {
+    await UsersCollection.findOneAndUpdate(filter.userId, {
       $pull: { boards: filter._id },
     });
   }

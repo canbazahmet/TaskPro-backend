@@ -48,8 +48,6 @@ taskSchema.post('save', handleSaveError);
 taskSchema.pre('findOneAndUpdate', setUpdateSettings);
 taskSchema.post('findOneAndUpdate', handleSaveError);
 
-taskSchema.index({ userId: 1, boardId: 1, columnId: 1 });
-
 const TasksCollection = model('task', taskSchema);
 
 export default TasksCollection;

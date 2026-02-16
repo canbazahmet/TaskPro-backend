@@ -14,7 +14,6 @@ const PORT = Number(env('PORT', '3000'));
 
 export const setupServer = () => {
   const app = express();
-  app.set('trust proxy', 1);
 
   app.use(
     express.json({
