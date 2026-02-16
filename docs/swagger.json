@@ -58,12 +58,12 @@
                   "email": {
                     "description": "User email",
                     "type": "string",
-                    "example": "vadym123@gmail.com"
+                    "example": "ahmetcanbaz@example.com"
                   },
                   "password": {
                     "description": "Password user",
                     "type": "string",
-                    "example": "123556789"
+                    "example": "123456789"
                   }
                 }
               }
@@ -132,17 +132,17 @@
                   "name": {
                     "description": "user name",
                     "type": "string",
-                    "example": "DmytroBoyko"
+                    "example": "Ahmet"
                   },
                   "email": {
                     "description": "User email",
                     "type": "string",
-                    "example": "vadym123@gmail.com"
+                    "example": "ahmetcanbaz@example.com"
                   },
                   "password": {
                     "description": "Password user",
                     "type": "string",
-                    "example": "123556789"
+                    "example": "123456789"
                   }
                 }
               }
@@ -368,17 +368,17 @@
                   "name": {
                     "description": "User name",
                     "type": "string",
-                    "example": "Dmytro Boyko"
+                    "example": "Ahmet Canbaz"
                   },
                   "email": {
                     "description": "User email",
                     "type": "string",
-                    "example": "dmytro3@example.com"
+                    "example": "ahmetcanbaz@example.com"
                   },
                   "password": {
                     "description": "Password user",
                     "type": "string",
-                    "example": "123556789"
+                    "example": "123456789"
                   },
                   "theme": {
                     "description": "Theme site user",
@@ -1185,7 +1185,7 @@
                   "email": {
                     "description": "User email",
                     "type": "string",
-                    "example": "vadym123@gmail.com"
+                    "example": "ahmetcanbaz@example.com"
                   },
                   "comment": {
                     "description": "Comment user",
@@ -1254,17 +1254,17 @@
           "name": {
             "description": "User name",
             "type": "string",
-            "example": "Dmytro Boyko"
+            "example": "Ahmet Canbaz"
           },
           "email": {
             "description": "User email",
             "type": "string",
-            "example": "dmytro3@example.com"
+            "example": "ahmetcanbaz@example.com"
           },
           "password": {
             "description": "Password user",
             "type": "string",
-            "example": "123556789"
+            "example": "123456789"
           },
           "theme": {
             "description": "Theme site user",
@@ -1509,7 +1509,7 @@
           "name": {
             "description": "User name",
             "type": "string",
-            "example": "Ahmet"
+            "example": "Ahmet Canbaz"
           },
           "email": {
             "description": "User email",
