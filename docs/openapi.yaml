@@ -4,17 +4,22 @@ info:
   title: TaskPro app
   license:
     name: Apache 2.0
-    url: <http://www.apache.org/licenses/LICENSE-2.0.html>
-  description: >
-    This is a documentation of students app
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  description: This is a documentation of TaskPro app
+
 tags:
-  - name: Students
-    description: Operations about users.
-  - name: Auth
-    description: Auth operations.
+  - name: Authentication
+    description: Operations related to authentication
+  - name: Boards
+    description: Operations related to boards
+  - name: Columns
+    description: Operations related to columns
+  - name: Tasks
+    description: Operations related to tasks
+  - name: Email
+    description: Operations related to email
 servers:
-  - url: <http://localhost:3000>
-  - url: <https://example.com/api/v1>
+  - url: https://taskpro-backend-qxl7.onrender.com
 paths:
 components:
   securitySchemes:

@@ -68,13 +68,12 @@ export const getUserController = async (req, res, next) => {
 export const updateUserController = async (req, res) => {
   const avatar = req.file;
   const { _id } = req.user;
-  let avatarUrl;
+  const updateData = { ...req.body };
 
   if (avatar && env('ENABLE_CLOUDINARY') === 'true') {
-    avatarUrl = await saveFileToCloudinary(avatar);
+    const avatarUrl = await saveFileToCloudinary(avatar);
+    updateData.avatar = avatarUrl;
   }
-
-  const updateData = { ...req.body, avatar: avatarUrl };
   const result = await updateUser({ _id }, updateData);
 
   if (!result) {
