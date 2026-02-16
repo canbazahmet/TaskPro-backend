@@ -24,9 +24,10 @@ export const postTaskController = async (req, res, next) => {
     );
   }
 
-  req.body.userId = userId;
-
-  const newTask = await postTask(req.body);
+  const newTask = await postTask({
+    ...req.body,
+    userId,
+  });
 
   res.status(201).json({
     status: 201,

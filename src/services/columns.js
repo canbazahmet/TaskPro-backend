@@ -44,9 +44,12 @@ export const deleteColumn = async (filter) => {
 
   if (deletedColumn) {
     await TaskCollection.deleteMany({ columnId: filter._id });
-    await BoardCollection.findOneAndUpdate(deletedColumn.boardId, {
-      $pull: { columns: filter._id },
-    });
+    await BoardCollection.findOneAndUpdate(
+      { _id: deletedColumn.boardId },
+      {
+        $pull: { columns: filter._id },
+      },
+    );
   }
 
   return deletedColumn;

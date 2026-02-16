@@ -5,11 +5,6 @@ import ColumnCollection from '../db/Columns.js';
 
 export const addColumnController = async (req, res, next) => {
   const { _id: userId } = req.user;
-  const { boardId } = req.body;
-
-  if (!boardId) {
-    return next(createHttpError(400, 'Missing boardId.'));
-  }
 
   const newColumn = await columnsServices.addColumn({ ...req.body, userId });
 

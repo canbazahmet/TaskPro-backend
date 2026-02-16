@@ -22,7 +22,7 @@ export const replaceTask = async (oldColumn, newColumn, taskId) => {
   });
 
   await ColumnCollection.findOneAndUpdate(newColumn, {
-    $push: { tasks: taskId },
+    $addToSet: { tasks: taskId },
   });
 };
 
@@ -49,9 +49,12 @@ export const deleteTask = async (filter) => {
   const deletedTask = await TasksCollection.findOneAndDelete(filter);
 
   if (deletedTask) {
-    await ColumnCollection.findOneAndUpdate(deletedTask.columnId, {
-      $pull: { tasks: filter._id },
-    });
+    await ColumnCollection.findOneAndUpdate(
+      { _id: deletedTask.columnId },
+      {
+        $pull: { tasks: filter._id },
+      },
+    );
   }
 
   return deletedTask;

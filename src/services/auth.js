@@ -22,11 +22,11 @@ export const registerUser = async (payload) => {
   const user = await UsersCollection.findOne({ email: payload.email });
   if (user) throw createHttpError(409, 'Email in use');
 
-  const encrypdetPassword = await bcrypt.hash(payload.password, 10);
+  const encryptedPassword = await bcrypt.hash(payload.password, 10);
 
   return await UsersCollection.create({
     ...payload,
-    password: encrypdetPassword,
+    password: encryptedPassword,
   });
 };
 
@@ -68,27 +68,31 @@ export const updateUser = async (filter, payload, options = {}) => {
   });
   if (!currentUser) throw createHttpError(404, 'Not found user');
 
-  if (payload.theme && payload.theme === currentUser.theme) {
-    return {
-      user: currentUser,
-    };
+  const updatePayload = { ...payload };
+
+  if (updatePayload.theme && updatePayload.theme === currentUser.theme) {
+    delete updatePayload.theme;
   }
 
-  if (payload.password) {
-    const encryptedPassword = await bcrypt.hash(payload.password, 10);
-    payload.password = encryptedPassword;
+  if (updatePayload.password) {
+    const encryptedPassword = await bcrypt.hash(updatePayload.password, 10);
+    updatePayload.password = encryptedPassword;
   }
 
-  const rawResult = await UsersCollection.findOneAndUpdate(filter, payload, {
-    ...options,
-    new: true,
-    includeResultMetadata: true,
-  });
+  const updatedUser = await UsersCollection.findOneAndUpdate(
+    filter,
+    updatePayload,
+    {
+      ...options,
+      new: true,
+      runValidators: true,
+    },
+  );
 
-  if (!rawResult || !rawResult.value) return null;
+  if (!updatedUser) return null;
 
   return {
-    user: rawResult.value,
+    user: updatedUser,
   };
 };
 

@@ -30,4 +30,7 @@ const sessionsSchema = new Schema(
   },
 );
 
+sessionsSchema.index({ accessToken: 1 });
+sessionsSchema.index({ refreshToken: 1 });
+
 export const SessionsCollection = model('sessions', sessionsSchema);

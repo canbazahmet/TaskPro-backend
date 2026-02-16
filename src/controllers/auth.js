@@ -1,5 +1,6 @@
 import createHttpError from 'http-errors';
 import fs from 'node:fs/promises';
+import path from 'node:path';
 
 import { THIRTY_DAYS } from '../constants/tokenLifetime.js';
 import {
@@ -12,6 +13,7 @@ import {
 } from '../services/auth.js';
 import { env } from '../utils/env.js';
 import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
+import { UPLOAD_DIR } from '../constants/tempUpload.js';
 
 const getCookieOptions = () => {
   const isProd = env('NODE_ENV', 'development') === 'production';
@@ -85,7 +87,9 @@ export const updateUserController = async (req, res) => {
   if (avatar && env('ENABLE_CLOUDINARY') === 'true') {
     avatarUrl = await saveFileToCloudinary(avatar);
   } else if (avatar) {
-    await fs.unlink(avatar.path);
+    const targetPath = path.join(UPLOAD_DIR, avatar.filename);
+    await fs.rename(avatar.path, targetPath);
+    avatarUrl = `/uploads/${avatar.filename}`;
   }
 
   const updateData = {

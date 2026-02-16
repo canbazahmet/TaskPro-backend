@@ -32,6 +32,8 @@ const boardSchema = new Schema(
   { versionKey: false, timestamps: true },
 );
 
+boardSchema.index({ userId: 1 });
+
 const BoardCollection = model('board', boardSchema);
 
 export default BoardCollection;
