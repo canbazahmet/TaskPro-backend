@@ -1,0 +1,59 @@
+tags:
+  - Authentication
+summary: Update user
+operationId: updateUser
+description: 'update user information'
+security:
+  - bearerAuth: []
+requestBody:
+  content:
+    multipart/form-data:
+      schema:
+        type: object
+        properties:
+          name:
+            description: 'User name'
+            type: string
+            example: 'Ahmet'
+          email:
+            description: 'User email'
+            type: string
+            example: 'ahmetcanbaz@example.com'
+          password:
+            description: 'Password user'
+            type: string
+            example: '123456789'
+          theme:
+            description: 'Theme site user'
+            type: string
+            enum: ['light', 'dark', 'violet']
+            example: 'light'
+          avatar:
+            description: 'Avatar user'
+            type: string
+            format: binary
+responses:
+  '200':
+    description: 'update user'
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 200
+            message:
+              type: string
+              example: Successfully update user with id 66fe3ccfdc289bed56cc83dc!
+            data:
+              type: object
+              $ref: ../../components/schemas/user.yaml
+  '404':
+    $ref: '../../components/responses/404.yaml'
+  '500':
+    $ref: '../../components/responses/500.yaml'

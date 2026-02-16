@@ -1,0 +1,33 @@
+type: object
+required:
+  - _id
+  - title
+  - boardId
+  - order
+  - userId
+properties:
+  _id:
+    type: string
+    format: objectId
+    example: '64ca67e7ae7f10c88b598384'
+  title:
+    type: string
+    minLength: 3
+    maxLength: 30
+    example: 'To Do'
+  boardId:
+    type: string
+    format: objectId
+    example: '64ca67e7ae7f10c88b598385'
+  userId:
+    type: string
+    format: objectId
+    example: '64ca67e7ae7f10c88b598386'
+  tasks:
+    type: array
+    items:
+      type: string
+      example: '64ca67e7ae7f10c88b598387'
+  order:
+    type: number
+    example: 1

@@ -1,0 +1,49 @@
+tags:
+  - Columns
+summary: Create a new column
+operationId: createColumn
+description: Create a new column for a specific board.
+security:
+  - bearerAuth: []
+requestBody:
+  required: true
+  content:
+    application/json:
+      schema:
+        type: object
+        required:
+          - title
+          - boardId
+        properties:
+          title:
+            type: string
+            minLength: 3
+            maxLength: 30
+            example: 'To Do'
+          boardId:
+            type: string
+            example: '64ca67e7ae7f10c88b598385'
+responses:
+  '201':
+    description: Column successfully created
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 201
+            message:
+              type: string
+              example: 'Column successfully created.'
+            data:
+              $ref: '../components/schemas/column.yaml'
+  '401':
+    $ref: '../components/responses/401.yaml'
+  '404':
+    $ref: '../components/responses/404.yaml'
