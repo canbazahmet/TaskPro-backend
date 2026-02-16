@@ -14,6 +14,5 @@ export const errorHandler = (err, req, res, next) => {
     status: 500,
     message: 'Something went wrong',
     error: err.message,
-    data: null,
   });
 };

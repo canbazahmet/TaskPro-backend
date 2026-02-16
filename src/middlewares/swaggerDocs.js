@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import swaggerUI from 'swagger-ui-express';
 import createHttpError from 'http-errors';
 
-import { SWAGGER_PATH } from '../constants/index.js';
+import { SWAGGER_PATH } from '../constants/swaggerPath.js';
 
 export const swaggerDocs = () => {
   try {

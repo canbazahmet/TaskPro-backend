@@ -1,5 +1,4 @@
 import multer from 'multer';
-import createHttpError from 'http-errors';
 
 import { TEMP_UPLOAD_DIR } from '../constants/tempUpload.js';
 
@@ -13,18 +12,4 @@ const storage = multer.diskStorage({
   },
 });
 
-const fileFilter = (req, file, cb) => {
-  if (file.mimetype.startsWith('image/')) {
-    cb(null, true);
-  } else {
-    cb(createHttpError(400, 'Only image files are allowed'));
-  }
-};
-
-export const upload = multer({
-  storage,
-  fileFilter,
-  limits: {
-    fileSize: 50 * 1024 * 1024,
-  },
-});
+export const upload = multer({ storage });

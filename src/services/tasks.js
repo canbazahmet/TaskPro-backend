@@ -3,12 +3,15 @@ import TasksCollection from '../db/Tasks.js';
 
 export const postTask = async (payload) => {
   const newTask = await TasksCollection.create(payload);
+
   const { boardId, columnId, userId, _id } = newTask;
 
-  await ColumnCollection.findOneAndUpdate(
-    { _id: columnId, boardId, userId },
-    { $addToSet: { tasks: _id } },
-  );
+  if (newTask) {
+    await ColumnCollection.findOneAndUpdate(
+      { _id: columnId, boardId, userId },
+      { $addToSet: { tasks: _id } },
+    );
+  }
 
   return newTask;
 };
@@ -32,22 +35,26 @@ export const updateTask = async (filter, payload) => {
     new: true,
   });
 
-  return result;
+  return {
+    data: result,
+    isNew: Boolean(result && result.upserted),
+  };
 };
 
 export const findOldColumnId = async (_id) => {
-  const data = await TasksCollection.findById(_id, { columnId: 1 });
-  return data?.columnId;
+  const data = await TasksCollection.findById(_id);
+  const oldColumnId = data.columnId;
+
+  return oldColumnId;
 };
 
 export const deleteTask = async (filter) => {
-  const deletedTask = await TasksCollection.findByIdAndDelete(filter._id);
+  const deletedTask = await TasksCollection.findByIdAndDelete(filter);
 
   if (deletedTask) {
-    await ColumnCollection.findOneAndUpdate(
-      { _id: deletedTask.columnId },
-      { $pull: { tasks: filter._id } },
-    );
+    await ColumnCollection.findOneAndUpdate(deletedTask.columnId, {
+      $pull: { tasks: filter._id },
+    });
   }
 
   return deletedTask;

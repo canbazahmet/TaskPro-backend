@@ -29,7 +29,7 @@ export const registerUsersController = async (req, res) => {
 
   res.status(201).json({
     status: 201,
-    message: 'Successfully registered a user!',
+    message: 'Successfuly registered a user!',
   });
 };
 
@@ -40,7 +40,7 @@ export const loginUsersController = async (req, res) => {
 
   res.status(200).json({
     status: 200,
-    message: 'Successfully logged in a user',
+    message: 'Seccessfuly logged in an user',
     data: {
       accessToken: session.accessToken,
       userId: session.userId,
@@ -48,18 +48,19 @@ export const loginUsersController = async (req, res) => {
   });
 };
 
-export const getUserController = async (req, res) => {
+export const getUserController = async (req, res, next) => {
   const { _id } = req.user;
 
   const data = await getUserById(_id);
 
   if (!data) {
-    throw createHttpError(404, `User with id ${_id} not found`);
+    next(createHttpError(404, `User with id ${_id} not found!`));
+    return;
   }
 
   res.json({
     status: 200,
-    message: `Successfully found user with id ${_id}`,
+    message: `Successfully found user with id ${_id}!`,
     data,
   });
 };
@@ -67,12 +68,13 @@ export const getUserController = async (req, res) => {
 export const updateUserController = async (req, res) => {
   const avatar = req.file;
   const { _id } = req.user;
-  const updateData = { ...req.body };
+  let avatarUrl;
 
   if (avatar && env('ENABLE_CLOUDINARY') === 'true') {
-    const avatarUrl = await saveFileToCloudinary(avatar);
-    updateData.avatar = avatarUrl;
+    avatarUrl = await saveFileToCloudinary(avatar);
   }
+
+  const updateData = { ...req.body, avatar: avatarUrl };
   const result = await updateUser({ _id }, updateData);
 
   if (!result) {

@@ -12,7 +12,7 @@ import { UPLOAD_DIR } from './constants/tempUpload.js';
 
 const PORT = Number(env('PORT', '3000'));
 
-export const startServer = () => {
+export const setupServer = () => {
   const app = express();
 
   app.use(
@@ -21,12 +21,7 @@ export const startServer = () => {
     }),
   );
 
-  app.use(
-    cors({
-      origin: env('APP_DOMAIN', '*'),
-      credentials: true,
-    }),
-  );
+  app.use(cors());
 
   app.use(cookieParser());
 
@@ -42,15 +37,7 @@ export const startServer = () => {
 
   app.use(errorHandler);
 
-  const server = app.listen(PORT, () => {
+  app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
-  });
-
-  process.on('SIGTERM', () => {
-    console.log('SIGTERM received, shutting down gracefully...');
-    server.close(() => {
-      console.log('Server closed');
-      process.exit(0);
-    });
   });
 };

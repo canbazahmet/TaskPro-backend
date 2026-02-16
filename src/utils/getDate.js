@@ -1,5 +1,10 @@
 export const getDate = () => {
-  const date = new Date();
-  date.setHours(0, 0, 0, 0);
-  return date;
+  const currentDate = new Date();
+  const dateWithoutTime = new Date(
+    currentDate.getFullYear(),
+    currentDate.getMonth(),
+    currentDate.getDate(),
+  );
+
+  return dateWithoutTime;
 };
