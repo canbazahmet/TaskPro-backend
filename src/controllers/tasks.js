@@ -19,7 +19,7 @@ export const postTaskController = async (req, res, next) => {
     return next(
       createHttpError(
         404,
-        `Column with id:${columnId} not found in board ${boardId} `,
+        `Column with id ${columnId} not found in board ${boardId}`,
       ),
     );
   }
@@ -47,10 +47,9 @@ export const updateTaskController = async (req, res, next) => {
     });
 
     if (!newColumn) {
-      next(
-        createHttpError(404, `Column with id:${req.body.columnId} not found`),
+      return next(
+        createHttpError(404, `Column with id ${req.body.columnId} not found`),
       );
-      return;
     }
   }
   if (
@@ -67,7 +66,7 @@ export const updateTaskController = async (req, res, next) => {
   const updatedTask = await updateTask({ _id, userId }, req.body);
 
   if (!updatedTask) {
-    throw createHttpError(404, `Task with id:${_id} not found`);
+    throw createHttpError(404, `Task with id ${_id} not found`);
   }
 
   res.status(200).json({
@@ -84,7 +83,7 @@ export const deleteTaskController = async (req, res, next) => {
   const data = await deleteTask({ _id: id, userId });
 
   if (!data) {
-    return next(createHttpError(404, `Task with id:${id} not found`));
+    return next(createHttpError(404, `Task with id ${id} not found`));
   }
 
   res.status(204).send();

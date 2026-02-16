@@ -36,7 +36,6 @@ export const getBoardController = async (req, res, next) => {
 
 export const addBoardController = async (req, res) => {
   const { _id: userId } = req.user;
-  console.log(userId);
 
   const data = await boardsServices.addBoard({
     ...req.body,
@@ -56,19 +55,16 @@ export const updateBoardController = async (req, res, next) => {
 
   const result = await boardsServices.updateBoard(
     { _id: id, userId },
-    {
-      ...req.body,
-    },
+    req.body,
   );
 
   if (!result) {
-    next(createHttpError(404, 'Board not found'));
-    return;
+    return next(createHttpError(404, 'Board not found'));
   }
 
   res.status(200).json({
     status: 200,
-    message: 'Successfully patched a board!',
+    message: 'Successfully updated a board!',
     data: result,
   });
 };

@@ -44,18 +44,16 @@ export const updateBoard = async (filter, payload, options = {}) => {
 
   if (!result || !result.value) return null;
 
-  return {
-    data: result.value,
-  };
+  return result.value;
 };
 
 export const deleteBoard = async (filter) => {
   const deletedBoard = await BoardCollection.findOneAndDelete(filter);
   if (deletedBoard) {
-    await ColumnCollection.deleteMany({ boardId: filter._id });
-    await TasksCollection.deleteMany({ boardId: filter._id });
-    await UsersCollection.findOneAndUpdate(filter.userId, {
-      $pull: { boards: filter._id },
+    await ColumnCollection.deleteMany({ boardId: deletedBoard._id });
+    await TasksCollection.deleteMany({ boardId: deletedBoard._id });
+    await UsersCollection.findByIdAndUpdate(filter.userId, {
+      $pull: { boards: deletedBoard._id },
     });
   }
 

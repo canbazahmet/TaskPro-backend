@@ -21,7 +21,12 @@ export const startServer = () => {
     }),
   );
 
-  app.use(cors());
+  app.use(
+    cors({
+      origin: env('APP_DOMAIN', '*'),
+      credentials: true,
+    }),
+  );
 
   app.use(cookieParser());
 
@@ -37,7 +42,15 @@ export const startServer = () => {
 
   app.use(errorHandler);
 
-  app.listen(PORT, () => {
+  const server = app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
+  });
+
+  process.on('SIGTERM', () => {
+    console.log('SIGTERM received, shutting down gracefully...');
+    server.close(() => {
+      console.log('Server closed');
+      process.exit(0);
+    });
   });
 };

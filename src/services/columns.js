@@ -1,13 +1,18 @@
+import createHttpError from 'http-errors';
 import BoardCollection from '../db/Boards.js';
 import ColumnCollection from '../db/Columns.js';
 import TaskCollection from '../db/Tasks.js';
+
+export const getColumnById = async (columnId) => {
+  return await ColumnCollection.findById(columnId);
+};
 
 export const addColumn = async (payload) => {
   const { boardId, userId } = payload;
 
   const board = await BoardCollection.findOne({ _id: boardId, userId });
   if (!board) {
-    throw new Error('User does not have access to this board.');
+    throw createHttpError(403, 'User does not have access to this board');
   }
 
   const highestOrderColumn = await ColumnCollection.findOne({ boardId })
@@ -41,10 +46,11 @@ export const deleteColumn = async (filter) => {
   const deletedColumn = await ColumnCollection.findOneAndDelete(filter);
 
   if (deletedColumn) {
-    await TaskCollection.deleteMany({ columnId: filter._id });
-    await BoardCollection.findOneAndUpdate(deletedColumn.boardId, {
-      $pull: { columns: filter._id },
-    });
+    await TaskCollection.deleteMany({ columnId: deletedColumn._id });
+    await BoardCollection.findOneAndUpdate(
+      { _id: deletedColumn.boardId },
+      { $pull: { columns: deletedColumn._id } },
+    );
   }
 
   return deletedColumn;

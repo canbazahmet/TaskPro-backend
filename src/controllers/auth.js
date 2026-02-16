@@ -29,7 +29,7 @@ export const registerUsersController = async (req, res) => {
 
   res.status(201).json({
     status: 201,
-    message: 'Successfuly registered a user!',
+    message: 'Successfully registered a user!',
   });
 };
 
@@ -40,7 +40,7 @@ export const loginUsersController = async (req, res) => {
 
   res.status(200).json({
     status: 200,
-    message: 'Successfuly logged in an user',
+    message: 'Successfully logged in a user',
     data: {
       accessToken: session.accessToken,
       userId: session.userId,
@@ -48,19 +48,18 @@ export const loginUsersController = async (req, res) => {
   });
 };
 
-export const getUserController = async (req, res, next) => {
+export const getUserController = async (req, res) => {
   const { _id } = req.user;
 
   const data = await getUserById(_id);
 
   if (!data) {
-    next(createHttpError(404, `User with id ${_id} not found!`));
-    return;
+    throw createHttpError(404, `User with id ${_id} not found`);
   }
 
   res.json({
     status: 200,
-    message: `Successfully found user with id ${_id}!`,
+    message: `Successfully found user with id ${_id}`,
     data,
   });
 };

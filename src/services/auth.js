@@ -22,11 +22,11 @@ export const registerUser = async (payload) => {
   const user = await UsersCollection.findOne({ email: payload.email });
   if (user) throw createHttpError(409, 'Email in use');
 
-  const encrypdetPassword = await bcrypt.hash(payload.password, 10);
+  const encryptedPassword = await bcrypt.hash(payload.password, 10);
 
   return await UsersCollection.create({
     ...payload,
-    password: encrypdetPassword,
+    password: encryptedPassword,
   });
 };
 
@@ -66,7 +66,7 @@ export const updateUser = async (filter, payload, options = {}) => {
     path: 'boards',
     select: 'title icon backgroundImage',
   });
-  if (!currentUser) throw createHttpError(404, 'Not found user');
+  if (!currentUser) throw createHttpError(404, 'User not found');
 
   if (payload.theme && payload.theme === currentUser.theme) {
     return {
@@ -87,8 +87,15 @@ export const updateUser = async (filter, payload, options = {}) => {
 
   if (!rawResult || !rawResult.value) return null;
 
+  const updatedUser = await UsersCollection.findById(
+    rawResult.value._id,
+  ).populate({
+    path: 'boards',
+    select: 'title icon backgroundImage',
+  });
+
   return {
-    user: rawResult.value,
+    user: updatedUser,
   };
 };
 
