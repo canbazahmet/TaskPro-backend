@@ -2,7 +2,7 @@ import { sendHelpEmail } from '../services/sendEmail.js';
 
 export const sendEmailController = async (req, res) => {
   const { email, comment } = req.body;
-  const { name } = req.user;
+  const name = req.user?.name || 'User';
   await sendHelpEmail(email, comment, name);
   res.json({
     message: 'Request help email was successfully sent!',
