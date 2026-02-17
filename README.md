@@ -1,8 +1,8 @@
-# TaskPro Backend
+# TaskPro Backend 📦
 
 Backend API for TaskPro. Provides auth, boards, columns, tasks, and help email endpoints, plus Swagger documentation.
 
-## Technologies
+## Technologies 🧰
 
 - Node.js (ESM)
 - Express.js
@@ -13,7 +13,7 @@ Backend API for TaskPro. Provides auth, boards, columns, tasks, and help email e
 - Swagger UI (OpenAPI)
 - Cloudinary (optional uploads)
 
-## Component Structure
+## Component Structure 🧱
 
 - src/
   - index.js: app entry point
@@ -30,12 +30,11 @@ Backend API for TaskPro. Provides auth, boards, columns, tasks, and help email e
 - docs/: OpenAPI files (swagger.json)
 - swagger/: source YAML files
 
-## Swagger
+## Swagger 🧾
 
-- Local: http://localhost:5003/api-docs
 - Deployed: https://taskpro-backend-qxl7.onrender.com/api-docs
 
-## Environment Variables (example)
+## Environment Variables (example) 🔐
 
 - PORT
 - MONGODB_URI
@@ -44,7 +43,7 @@ Backend API for TaskPro. Provides auth, boards, columns, tasks, and help email e
 - SMTP_FROM
 - CLOUD_NAME, API_KEY, API_SECRET (optional)
 
-## Scripts
+## Scripts ▶️
 
 - npm run start
 - npm run dev
