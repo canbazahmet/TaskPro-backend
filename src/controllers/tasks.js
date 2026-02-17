@@ -39,20 +39,26 @@ export const updateTaskController = async (req, res, next) => {
   const { id: _id } = req.params;
   const { _id: userId } = req.user;
 
-  const oldColumnId = await findOldColumnId(_id);
+  const oldColumnId = await findOldColumnId({ _id, userId });
+
+  if (!oldColumnId) {
+    throw createHttpError(404, `Task with id:${_id} not found`);
+  }
 
   if (req.body.columnId) {
     const newColumn = await checkColumn({
       _id: req.body.columnId,
+      userId,
     });
 
     if (!newColumn) {
-      next(
-        createHttpError(404, `Column with id:${req.body.columnId} not found`),
+      throw createHttpError(
+        404,
+        `Column with id:${req.body.columnId} not found`,
       );
-      return;
     }
   }
+
   if (
     req.body.columnId &&
     oldColumnId.toString() !== req.body.columnId.toString()

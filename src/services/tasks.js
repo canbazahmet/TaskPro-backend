@@ -31,30 +31,25 @@ export const checkColumn = async (filter) => {
 };
 
 export const updateTask = async (filter, payload) => {
-  const result = await TasksCollection.findOneAndUpdate(filter, payload, {
+  return await TasksCollection.findOneAndUpdate(filter, payload, {
     new: true,
   });
-
-  return {
-    data: result,
-    isNew: Boolean(result && result.upserted),
-  };
 };
 
-export const findOldColumnId = async (_id) => {
-  const data = await TasksCollection.findById(_id);
-  const oldColumnId = data.columnId;
+export const findOldColumnId = async (filter) => {
+  const data = await TasksCollection.findOne(filter, { columnId: 1 });
 
-  return oldColumnId;
+  return data ? data.columnId : null;
 };
 
 export const deleteTask = async (filter) => {
-  const deletedTask = await TasksCollection.findByIdAndDelete(filter);
+  const deletedTask = await TasksCollection.findOneAndDelete(filter);
 
   if (deletedTask) {
-    await ColumnCollection.findOneAndUpdate(deletedTask.columnId, {
-      $pull: { tasks: filter._id },
-    });
+    await ColumnCollection.findOneAndUpdate(
+      { _id: deletedTask.columnId },
+      { $pull: { tasks: deletedTask._id } },
+    );
   }
 
   return deletedTask;
