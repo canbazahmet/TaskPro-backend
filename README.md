@@ -15,39 +15,137 @@ Backend API for TaskPro. Provides auth, boards, columns, tasks, and help email e
 
 ## Component Structure 🧱
 
-- src/
-  - index.js: app bootstrap and server start
-  - server.js: Express app setup, middleware, routes, Swagger
-  - constants/: shared config constants
-    - boards.js, tasks.js, themeType.js: enums and defaults
-    - SMPT.js: SMTP/Brevo env var names
-    - swaggerPath.js: path to Swagger JSON
-    - templatesDir.js: template folder path
-  - controllers/: request handlers (HTTP -> service)
-    - auth.js, board.js, columns.js, tasks.js, email.js
-  - db/: MongoDB models and hooks
-    - User.js, Boards.js, Columns.js, Tasks.js, Session.js
-    - hooks.js: Mongoose pre/post hooks
-    - initMongoDB.js: database connection
-  - middlewares/: request pipeline helpers
-    - authenticate.js: JWT auth
-    - validateBody.js: Joi validation
-    - isValidId.js, convertBoardId.js, convertColumnId.js
-    - errorHandler.js, notFoundHandler.js, logger.js
-    - swaggerDocs.js: Swagger UI middleware
-  - routers/: route definitions and mounting
-    - auth.js, boards.js, columns.js, tasks.js, email.js
-  - services/: business logic and data access
-    - auth.js, boards.js, columns.js, tasks.js, sendEmail.js
-  - templates/: email templates (e.g., needHelp.html)
-  - utils/: shared utilities
-    - env.js: env var getter
-    - sendEmail.js: email delivery provider
-    - saveFileToCloudinary.js, createDirIfNotExists.js
-    - parseFilterParams.js, ctrlWrapper.js
-  - validation/: Joi schemas for each route group
-- docs/: generated OpenAPI JSON (swagger.json)
-- swagger/: source YAML schema and paths
+```
+.
+├─ .editorconfig
+├─ .env
+├─ .env.template
+├─ .gitignore
+├─ .prettierrc
+├─ eslint.config.mjs
+├─ package-lock.json
+├─ package.json
+├─ README.md
+├─ redocly.yaml
+├─ docs/
+│  ├─ index.html
+│  ├─ openapi.yaml
+│  └─ swagger.json
+├─ src/
+│  ├─ index.js
+│  ├─ server.js
+│  ├─ constants/
+│  │  ├─ boards.js
+│  │  ├─ cloudinary.js
+│  │  ├─ emailRegexp.js
+│  │  ├─ SMPT.js
+│  │  ├─ swaggerPath.js
+│  │  ├─ tasks.js
+│  │  ├─ templatesDir.js
+│  │  ├─ tempUpload.js
+│  │  ├─ themeType.js
+│  │  └─ tokenLifetime.js
+│  ├─ controllers/
+│  │  ├─ auth.js
+│  │  ├─ board.js
+│  │  ├─ columns.js
+│  │  ├─ email.js
+│  │  └─ tasks.js
+│  ├─ db/
+│  │  ├─ Boards.js
+│  │  ├─ Columns.js
+│  │  ├─ hooks.js
+│  │  ├─ initMongoDB.js
+│  │  ├─ Session.js
+│  │  ├─ Tasks.js
+│  │  └─ User.js
+│  ├─ middlewares/
+│  │  ├─ authenticate.js
+│  │  ├─ convertBoardId.js
+│  │  ├─ convertColumnId.js
+│  │  ├─ errorHandler.js
+│  │  ├─ isValidColumnId.js
+│  │  ├─ isValidId.js
+│  │  ├─ logger.js
+│  │  ├─ multer.js
+│  │  ├─ notFoundHandler.js
+│  │  ├─ swaggerDocs.js
+│  │  └─ validateBody.js
+│  ├─ routers/
+│  │  ├─ allUse.js
+│  │  ├─ auth.js
+│  │  ├─ boards.js
+│  │  ├─ columns.js
+│  │  ├─ email.js
+│  │  └─ tasks.js
+│  ├─ services/
+│  │  ├─ auth.js
+│  │  ├─ boards.js
+│  │  ├─ columns.js
+│  │  ├─ sendEmail.js
+│  │  └─ tasks.js
+│  ├─ templates/
+│  │  └─ needHelp.html
+│  ├─ utils/
+│  │  ├─ createDirIfNotExists.js
+│  │  ├─ ctrlWrapper.js
+│  │  ├─ env.js
+│  │  ├─ getDate.js
+│  │  ├─ parseFilterParams.js
+│  │  ├─ saveFileToCloudinary.js
+│  │  └─ sendEmail.js
+│  └─ validation/
+│     ├─ auth.js
+│     ├─ boards.js
+│     ├─ columns.js
+│     ├─ email.js
+│     └─ tasks.js
+├─ swagger/
+│  ├─ components/
+│  │  ├─ responses/
+│  │  │  ├─ 400.yaml
+│  │  │  ├─ 401.yaml
+│  │  │  ├─ 403.yaml
+│  │  │  ├─ 404.yaml
+│  │  │  ├─ 409.yaml
+│  │  │  └─ 500.yaml
+│  │  └─ schemas/
+│  │     ├─ board.yaml
+│  │     ├─ column.yaml
+│  │     ├─ email.yaml
+│  │     ├─ sessions.yaml
+│  │     ├─ task.yaml
+│  │     └─ user.yaml
+│  ├─ pathsAuth/
+│  │  ├─ postLogin.yaml
+│  │  ├─ postLogout.yaml
+│  │  ├─ postRefresh.yaml
+│  │  ├─ postRegister.yaml
+│  │  └─ {id}/
+│  │     ├─ get.yaml
+│  │     └─ patch.yaml
+│  ├─ pathsBoadrs/
+│  │  ├─ get.yaml
+│  │  ├─ post.yaml
+│  │  └─ {id}/
+│  │     ├─ delete.yaml
+│  │     ├─ get.yaml
+│  │     └─ patch.yaml
+│  ├─ pathsColumn/
+│  │  ├─ post.yaml
+│  │  └─ {id}/
+│  │     ├─ delete.yaml
+│  │     └─ patch.yaml
+│  ├─ pathsHelp/
+│  │  └─ post.yaml
+│  └─ pathsTasks/
+│     ├─ post.yaml
+│     └─ {id}/
+│        ├─ delete.yaml
+│        └─ patch.yaml
+├─ temp/
+└─ uploads/
+```
 
 ## Swagger 🧾
 
