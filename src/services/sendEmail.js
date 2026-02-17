@@ -8,22 +8,32 @@ import { env } from '../utils/env.js';
 import { SMTP } from '../constants/SMPT.js';
 
 export const sendHelpEmail = async (email, comment, name) => {
-  if (!name) name = 'Dear Friend';
+  try {
+    if (!name) name = 'Dear Friend';
 
-  const needHelpTemplatePath = path.join(TEMPLATES_DIR, 'needHelp.html');
+    const needHelpTemplatePath = path.join(TEMPLATES_DIR, 'needHelp.html');
 
-  const templateSource = (await fs.readFile(needHelpTemplatePath)).toString();
+    const templateSource = (await fs.readFile(needHelpTemplatePath)).toString();
 
-  const template = handlebars.compile(templateSource);
-  const html = template({
-    name,
-    comment,
-  });
+    const template = handlebars.compile(templateSource);
+    const html = template({
+      name,
+      comment,
+    });
 
-  await sendEmail({
-    from: env(SMTP.SMTP_FROM),
-    to: email,
-    subject: 'Help Request',
-    html,
-  });
+    await sendEmail({
+      from: env(SMTP.SMTP_FROM),
+      to: email,
+      subject: 'Help Request',
+      html,
+    });
+  } catch (error) {
+    console.error('Email sending error:', {
+      message: error.message,
+      stack: error.stack,
+      to: email,
+      from: env(SMTP.SMTP_FROM),
+    });
+    throw error;
+  }
 };

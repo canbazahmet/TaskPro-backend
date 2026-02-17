@@ -1,17 +1,20 @@
-import nodemailer from 'nodemailer';
+import brevo from '@getbrevo/brevo';
 
 import { env } from '../utils/env.js';
 import { SMTP } from '../constants/SMPT.js';
 
-const transporter = nodemailer.createTransport({
-  host: env(SMTP.SMTP_HOST),
-  port: Number(env(SMTP.SMTP_PORT)),
-  auth: {
-    user: env(SMTP.SMTP_USER),
-    pass: env(SMTP.SMTP_PASSWORD),
-  },
-});
+const apiInstance = new brevo.TransactionalEmailsApi();
+apiInstance.setApiKey(
+  brevo.TransactionalEmailsApiApiKeys.apiKey,
+  env(SMTP.BREVO_API_KEY),
+);
 
 export const sendEmail = async (options) => {
-  return await transporter.sendMail(options);
+  const sendSmtpEmail = new brevo.SendSmtpEmail();
+  sendSmtpEmail.subject = options.subject;
+  sendSmtpEmail.htmlContent = options.html;
+  sendSmtpEmail.sender = { email: options.from, name: 'TaskPro' };
+  sendSmtpEmail.to = [{ email: options.to }];
+
+  return await apiInstance.sendTransacEmail(sendSmtpEmail);
 };
