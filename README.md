@@ -16,19 +16,38 @@ Backend API for TaskPro. Provides auth, boards, columns, tasks, and help email e
 ## Component Structure 🧱
 
 - src/
-  - index.js: app entry point
-  - server.js: Express setup, middleware, routes, Swagger
-  - constants/: shared constants (SMTP, swagger path, etc.)
-  - controllers/: request handlers
-  - db/: Mongoose models and hooks
-  - middlewares/: auth, validation, error handling, Swagger
-  - routers/: route definitions
+  - index.js: app bootstrap and server start
+  - server.js: Express app setup, middleware, routes, Swagger
+  - constants/: shared config constants
+    - boards.js, tasks.js, themeType.js: enums and defaults
+    - SMPT.js: SMTP/Brevo env var names
+    - swaggerPath.js: path to Swagger JSON
+    - templatesDir.js: template folder path
+  - controllers/: request handlers (HTTP -> service)
+    - auth.js, board.js, columns.js, tasks.js, email.js
+  - db/: MongoDB models and hooks
+    - User.js, Boards.js, Columns.js, Tasks.js, Session.js
+    - hooks.js: Mongoose pre/post hooks
+    - initMongoDB.js: database connection
+  - middlewares/: request pipeline helpers
+    - authenticate.js: JWT auth
+    - validateBody.js: Joi validation
+    - isValidId.js, convertBoardId.js, convertColumnId.js
+    - errorHandler.js, notFoundHandler.js, logger.js
+    - swaggerDocs.js: Swagger UI middleware
+  - routers/: route definitions and mounting
+    - auth.js, boards.js, columns.js, tasks.js, email.js
   - services/: business logic and data access
-  - templates/: email templates
-  - utils/: helpers (env, email sender, file utils)
-  - validation/: Joi schemas
-- docs/: OpenAPI files (swagger.json)
-- swagger/: source YAML files
+    - auth.js, boards.js, columns.js, tasks.js, sendEmail.js
+  - templates/: email templates (e.g., needHelp.html)
+  - utils/: shared utilities
+    - env.js: env var getter
+    - sendEmail.js: email delivery provider
+    - saveFileToCloudinary.js, createDirIfNotExists.js
+    - parseFilterParams.js, ctrlWrapper.js
+  - validation/: Joi schemas for each route group
+- docs/: generated OpenAPI JSON (swagger.json)
+- swagger/: source YAML schema and paths
 
 ## Swagger 🧾
 
