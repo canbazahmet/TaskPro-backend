@@ -2,6 +2,10 @@
 
 Backend API for TaskPro. Provides auth, boards, columns, tasks, and help email endpoints, plus Swagger documentation.
 
+## Swagger 🧾
+
+[Deployed](https://taskpro-backend-qxl7.onrender.com/api-docs/)
+
 ## Technologies 🧰
 
 - Node.js (ESM)
@@ -146,10 +150,6 @@ Backend API for TaskPro. Provides auth, boards, columns, tasks, and help email e
 ├─ temp/
 └─ uploads/
 ```
-
-## Swagger 🧾
-
-- Deployed: https://taskpro-backend-qxl7.onrender.com/api-docs
 
 ## Environment Variables (example) 🔐
 
