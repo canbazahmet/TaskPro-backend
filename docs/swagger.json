@@ -245,7 +245,7 @@
                   "userId": {
                     "description": "User userId",
                     "type": "string",
-                    "example": "673712067502f11dfed72875"
+                    "example": "698f13fe2cf5865b9759fcd4"
                   },
                   "accessToken": {
                     "description": "accessToken user",
@@ -1314,27 +1314,27 @@
             "description": "UserId user",
             "type": "string",
             "format": "objectId",
-            "example": "673760f000a6d96eb9911052"
+            "example": "698f13fe2cf5865b9759fcd4"
           },
           "accessToken": {
             "description": "AccessToken user",
             "type": "string",
-            "example": "3Qqly8GeJgICEVIA+lgr/M32j+FhiVX2v6G70//4"
+            "example": "3Qert8GeJgICEVIA+lgr/M32j+FhiVX2v6G70//4"
           },
           "refreshToken": {
             "description": "RefreshToken user",
             "type": "string",
-            "example": "GzAHVum5IB3Xiyt88ypjT5oXV8SLjHEhpCwdJDz3"
+            "example": "GzAHRyn5IB3Xiyt88ypjT5oXV8SLjHEhpCwdJDz3"
           },
           "accessTokenValidUntil": {
             "description": "AccessTokenValidUntil user",
             "type": "number",
-            "example": "2024-11-16T14:56:06.528+00:00"
+            "example": "2025-11-05T15:00:00.528+00:00"
           },
           "refreshTokenValidUntil": {
             "description": "RefreshTokenValidUntil user",
             "type": "number",
-            "example": "2024-12-15T14:56:06.528+00:00"
+            "example": "2025-12-05T15:00:00.528+00:00"
           }
         }
       },
@@ -1404,7 +1404,7 @@
             "type": "string",
             "format": "objectId",
             "description": "User's id",
-            "example": "63e9a7752d25b75c0f233a7f"
+            "example": "698f13fe2cf5865b9759fcd4"
           }
         }
       },
@@ -1431,7 +1431,7 @@
           "userId": {
             "type": "string",
             "format": "objectId",
-            "example": "64ca67e7ae7f10c88b598386"
+            "example": "698f13fe2cf5865b9759fcd4"
           },
           "tasks": {
             "type": "array",
@@ -1483,7 +1483,7 @@
           "userId": {
             "type": "string",
             "format": "objectId",
-            "example": "648adad50c7f3f1c0c4f8a9e"
+            "example": "698f13fe2cf5865b9759fcd4"
           },
           "boardId": {
             "type": "string",
